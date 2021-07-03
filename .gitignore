@@ -1,0 +1,6 @@
+.cache/
+.direnv/
+.idea/
+dist/
+node_modules
+result

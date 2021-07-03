@@ -1,0 +1,74 @@
+{
+    "gitignore": {
+        "branch": "master",
+        "description": "Nix function for filtering local git sources",
+        "homepage": "",
+        "owner": "hercules-ci",
+        "repo": "gitignore",
+        "rev": "211907489e9f198594c0eb0ca9256a1949c9d412",
+        "sha256": "06j7wpvj54khw0z10fjyi31kpafkr6hi1k0di13k1xp8kywvfyx8",
+        "type": "tarball",
+        "url": "https://github.com/hercules-ci/gitignore/archive/211907489e9f198594c0eb0ca9256a1949c9d412.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "niv": {
+        "branch": "master",
+        "description": "Easy dependency management for Nix projects",
+        "homepage": "https://github.com/nmattia/niv",
+        "owner": "nmattia",
+        "repo": "niv",
+        "rev": "e0ca65c81a2d7a4d82a189f1e23a48d59ad42070",
+        "sha256": "1pq9nh1d8nn3xvbdny8fafzw87mj7gsmp6pxkdl65w2g18rmcmzx",
+        "type": "tarball",
+        "url": "https://github.com/nmattia/niv/archive/e0ca65c81a2d7a4d82a189f1e23a48d59ad42070.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "nixpkgs-20.09": {
+        "branch": "nixos-20.09",
+        "description": "Nix Packages collection",
+        "homepage": "",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "6953332fb7b302d5e0836f92ce78276cd89b1138",
+        "sha256": "1hycm5bm5dzrkz4rdfnafz2yyg4jb66axg0xhvp1qd2sbv2f90kf",
+        "type": "tarball",
+        "url": "https://github.com/nixos/nixpkgs/archive/6953332fb7b302d5e0836f92ce78276cd89b1138.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "nixpkgs-21.05": {
+        "branch": "release-21.05",
+        "description": "Nix Packages collection",
+        "homepage": "",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "21b696caf392ad6fa513caf3327d0aa0430ffb72",
+        "sha256": "1056r3383aaf5zhf7rbvka76gqxb8b7rwqxnmar29vxhs9h56m5k",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/21b696caf392ad6fa513caf3327d0aa0430ffb72.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "node2nix": {
+        "branch": "master",
+        "description": "Generate Nix expressions to build NPM packages",
+        "homepage": "",
+        "owner": "svanderburg",
+        "repo": "node2nix",
+        "rev": "0c94281ea98f1b17532176106f90f909aa133704",
+        "sha256": "1r677r7sqjp5hg7rs7wall6nipka3pnrglnjdaj098v1xhswzjbx",
+        "type": "tarball",
+        "url": "https://github.com/svanderburg/node2nix/archive/0c94281ea98f1b17532176106f90f909aa133704.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "poetry2nix": {
+        "branch": "master",
+        "description": "Convert poetry projects to nix automagically [maintainer=@adisbladis] ",
+        "homepage": "",
+        "owner": "nix-community",
+        "repo": "poetry2nix",
+        "rev": "fcd0de5cc5c51a93e403f0d1bbd67e5e5bf875dc",
+        "sha256": "08bn9dbacgsd1a1yvlr0l8j3nv6yplwz1qdw3sq4sp0c179vr640",
+        "type": "tarball",
+        "url": "https://github.com/nix-community/poetry2nix/archive/fcd0de5cc5c51a93e403f0d1bbd67e5e5bf875dc.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    }
+}
