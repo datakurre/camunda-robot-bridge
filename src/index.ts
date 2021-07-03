@@ -9,96 +9,109 @@ import client, { subscribe } from "./client";
 
 dotenv.config();
 
-const TOPICS = (process.env.CLIENT_TOPIC || "Search for XKCD image,Download XKCD image").split(",");
-const ROBOT =
-  process.env.CLIENT_ROBOT ||
-  path.join(__dirname, "..", "robot", "result", "bin", "robot");
-const SUITE =
-  process.env.CLIENT_SUITE || path.join(__dirname, "..", "robot", "xkcd.robot");
-const LOG_LEVEL = process.env.ROBOT_LOG_LEVEL || "debug";
 const CAMUNDA_API_PATH =
   process.env.CAMUNDA_API_PATH || "http://localhost:8080/engine-rest";
 
-for (const topic of TOPICS) {
+const CAMUNDA_TOPIC = (
+  process.env.CAMUNDA_TOPIC || "Search for XKCD image,Download XKCD image"
+).split(",");
+
+const ROBOT_PYTHON_ENV =
+  process.env.ROBOT_PYTHON_ENV ||
+  path.join(__dirname, "..", "robot", "result");
+
+const ROBOT_SUITE =
+  process.env.ROBOT_SUITEROBOT_SUITE  || path.join(__dirname, "..", "robot", "xkcd.robot");
+
+const ROBOT_LOG_LEVEL = process.env.ROBOT_LOG_LEVEL || "debug";
+
+for (const topic of CAMUNDA_TOPIC) {
   (async () => {
     for await (const { task, taskService } of subscribe(client, topic)) {
-      // Task lock expiration in milliseconds
+
+      // Resolve lock expiration
       const lockExpiration =
         new Date(task.lockExpirationTime as string).getTime() -
         new Date().getTime();
 
-      // Schedule lock expiration extender
+      // Schedule to extend lock expiration in time
       const extendLock = async () => {
+        console.log("Extend lock", task.topicName, task.id);
         await taskService.extendLock(task, lockExpiration);
         extendLockTimeout = setTimeout(extendLock, lockExpiration / 2);
-        console.log("Extended lock for", task.id);
       };
       let extendLockTimeout = setTimeout(extendLock, lockExpiration / 2);
 
-      // Create tmpdir
+      // Create temporary task work directory
       const tmpdir = await fs.mkdtempSync(path.join(os.tmpdir(), "robot-"));
 
-      // Execute robot
-      const args = [
-        "--rpa",
-        "--loglevel",
-        LOG_LEVEL,
-        "--nostatusrc",
-        "--log",
-        "NONE",
-        "--report",
-        "NONE",
-        "--listener",
-        "CamundaListener",
-        "--variable",
-        `CAMUNDA_TASK_ID:${task.id}`,
-        "--variable",
-        `CAMUNDA_TASK_RETRIES:${task.retries}`,
-        "--variable",
-        `CAMUNDA_TASK_WORKER_ID:${task.workerId}`,
-        "--variable",
-        `CAMUNDA_TASK_PROCESS_INSTANCE_ID:${task.processInstanceId}`,
-        "--variable",
-        `CAMUNDA_TASK_EXECUTION_ID:${task.executionId}`,
-        "--task",
-        task.topicName || "n/a",
-        SUITE,
-      ];
+      // Execute robot for task
+      const exec = spawn(path.join(ROBOT_PYTHON_ENV, "bin", "robot"),
+        [
+          "--rpa",
+          "--loglevel",
+          ROBOT_LOG_LEVEL,
+          "--nostatusrc",
+          "--log",
+          "NONE",
+          "--report",
+          "NONE",
+          "--listener",
+          "CamundaListener",
+          "--variable",
+          `CAMUNDA_TASK_ID:${task.id}`,
+          "--variable",
+          `CAMUNDA_TASK_RETRIES:${task.retries}`,
+          "--variable",
+          `CAMUNDA_TASK_WORKER_ID:${task.workerId}`,
+          "--variable",
+          `CAMUNDA_TASK_PROCESS_INSTANCE_ID:${task.processInstanceId}`,
+          "--variable",
+          `CAMUNDA_TASK_EXECUTION_ID:${task.executionId}`,
+          "--task",
+          task.topicName || "n/a",
+          ROBOT_SUITE,
 
-      const exec = spawn(ROBOT, args, {
+        ], {
         cwd: tmpdir,
         env: {
           CAMUNDA_API_PATH,
         },
       });
 
+      // Collect stdout
       let stdout = "";
       exec.stdout.on("data", (data) => {
         stdout += data;
       });
 
+      // Collect stderr
       let stderr = "";
       exec.stderr.on("data", (data) => {
         stderr += data;
       });
 
-      // Clear timeout and remove tmpdir on exit
+      // Handle exit
       exec.on("close", async (code) => {
+
+        // Stop extending expiration timeout
         clearTimeout(extendLockTimeout);
+
+        // Remove temporary task work directory
         fs.rmdirSync(tmpdir, { recursive: true });
+
+        // Fail task if execution fail unexpectedly
         if (code !== 0) {
+          console.log("Fail task for", task.topicName, task.id);
+          console.log(stdout + stderr);
           await taskService.handleFailure(task, {
             errorMessage: `${stdout || stderr}`,
             errorDetails: `${stderr || stdout}`,
           });
-          fs.rmdirSync(tmpdir, { recursive: true });
         }
-        console.log(`child process exited with code ${code}`);
-        console.log(stdout);
-        console.log(stderr);
       });
 
-      console.log("Scheduled", task.topicName, task.id);
+      console.log("Handle", task.topicName, task.id);
     }
   })();
 }
