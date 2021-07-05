@@ -38,16 +38,16 @@ pkgs.stdenv.mkDerivation rec {
   '';
   installPhase = ''
     source $stdenv/setup;
-    mkdir -p $out/bin $out/var/lib/camunda-robotframework-bridge
-    cp -a dist/* $out/var/lib/camunda-robotframework-bridge
-    cat > $out/bin/camunda-robotframework-bridge << EOF
+    mkdir -p $out/bin $out/var/lib/carrot-executor
+    cp -a dist/* $out/var/lib/carrot-executor
+    cat > $out/bin/carrot-executor << EOF
     #!/usr/bin/env sh
-    cd $out/var/lib/camunda-robotframework-bridge && node .
+    cd $out/var/lib/carrot-executor && node .
     EOF
-    chmod u+x $out/bin/camunda-robotframework-bridge
+    chmod u+x $out/bin/carrot-executor
   '';
   postFixup = ''
-    wrapProgram $out/bin/camunda-robotframework-bridge \
+    wrapProgram $out/bin/carrot-executor \
       --prefix PATH : ${pkgs.lib.makeBinPath propagatedBuildInputs} \
       --suffix NODE_ENV : production \
       --suffix NODE_PATH : ${run_node_modules}

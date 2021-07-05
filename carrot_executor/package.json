@@ -1,8 +1,8 @@
 {
-  "name": "camunda-robotframework-bridge",
+  "name": "carrot-executor",
   "version": "1.0.0",
   "description": "Camunda Robot Framework RPA Bridge",
-  "main": "./camunda-robotframework-bridge.js",
+  "main": "./carrot-executor.js",
   "scripts": {
     "build": "rollup -c rollup.config.js",
     "prettier:check": "prettier --check \"src/*.ts\"",
@@ -12,15 +12,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/datakurre/camunda-robotframework-bridge.git"
+    "url": "git+https://github.com/datakurre/carrot-executor.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/datakurre/camunda-robotframework-bridge.git"
+    "url": "https://github.com/datakurre/carrot-executor.git"
   },
-  "homepage": "https://github.com/datakurre/camunda-robotframework-bridge#readme",
+  "homepage": "https://github.com/datakurre/carrot-executor#readme",
   "importSort": {
     ".js, .ts": {
       "style": "module",

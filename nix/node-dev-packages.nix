@@ -1366,8 +1366,8 @@ let
     };
   };
   args = {
-    name = "camunda-robotframework-bridge";
-    packageName = "camunda-robotframework-bridge";
+    name = "carrot-executor";
+    packageName = "carrot-executor";
     version = "1.0.0";
     src = ../client;
     dependencies = [
@@ -1544,7 +1544,7 @@ let
     buildInputs = globalBuildInputs;
     meta = {
       description = "Camunda Robot Framework RPA Bridge";
-      homepage = "https://github.com/datakurre/camunda-robotframework-bridge#readme";
+      homepage = "https://github.com/datakurre/carrot-executor#readme";
       license = "ISC";
     };
     production = false;

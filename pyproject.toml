@@ -1,17 +1,17 @@
 [tool.poetry]
-name = "camunda-robotframework-bridge"
+name = "carrot-executor"
 version = "0.4.0"
 description = "Camunda Robot Framework Bridge"
 authors = ["Asko Soukka <asko.soukka@iki.fi>"]
 license = "MIT"
 packages = [
     { include = "*.py", from="lib" },
-    { include = "camunda_robotframework_bridge/*.py" },
+    { include = "carrot_executor/*.py" },
 ]
-include = [ "camunda_robotframework_bridge/index.js" ]
+include = [ "carrot_executor/index.js" ]
 
 [tool.poetry.scripts]
-camunda-robotframework-bridge = "camunda_robotframework_bridge:main"
+carrot-executor = "carrot_executor:main"
 
 [tool.poetry.dependencies]
 python = "^3.8"

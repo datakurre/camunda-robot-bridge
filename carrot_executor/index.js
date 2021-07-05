@@ -8747,7 +8747,7 @@ const CAMUNDA_API_PATH$1 = process.env.CAMUNDA_API_PATH || "http://localhost:808
 const CLIENT_LOG_LEVEL = process.env.CLIENT_LOG_LEVEL || "debug";
 const CLIENT_MAX_TASKS = parseInt(process.env.CLIENT_MAX_TASKS || "4", 10) || 4;
 const CLIENT_POLL_INTERVAL = parseInt(process.env.CLIENT_POLL_INTERVAL || "10000", 10) || 10000;
-const CLIENT_WORKER_ID = process.env.CLIENT_WORKER_ID || "camunda-robotframework-bridge";
+const CLIENT_WORKER_ID = process.env.CLIENT_WORKER_ID || "carrot-executor";
 const client = new camundaExternalTaskClientJs.Client({
     baseUrl: CAMUNDA_API_PATH$1,
     workerId: CLIENT_WORKER_ID,
