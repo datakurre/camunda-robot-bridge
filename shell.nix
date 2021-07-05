@@ -4,12 +4,7 @@
 
 pkgs.mkShell {
   buildInputs = with pkgs; [
-    entr
-    gnumake
-    nodejs-14_x
-    node2nix
+    poetry
+    poetry2nix.cli
   ];
-  shellHook = ''
-    export SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt
-  '';
 }

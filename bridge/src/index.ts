@@ -11,24 +11,18 @@ dotenv.config();
 
 const CAMUNDA_API_PATH =
   process.env.CAMUNDA_API_PATH || "http://localhost:8080/engine-rest";
-
 const CAMUNDA_TOPIC = (
   process.env.CAMUNDA_TOPIC || "Search for XKCD image,Download XKCD image"
 ).split(",");
 
-const ROBOT_PYTHON_ENV =
-  process.env.ROBOT_PYTHON_ENV ||
-  path.join(__dirname, "..", "robot", "result");
-
-const ROBOT_SUITE =
-  process.env.ROBOT_SUITEROBOT_SUITE  || path.join(__dirname, "..", "robot", "xkcd.robot");
-
+const ROBOT_EXECUTABLE = process.env.ROBOT_PATH || "robot";
+const ROBOT_SUITE = process.env.ROBOT_SUITE || "n/a";
+const ROBOT_TASK = process.env.ROBOT_TASK || undefined;
 const ROBOT_LOG_LEVEL = process.env.ROBOT_LOG_LEVEL || "debug";
 
 for (const topic of CAMUNDA_TOPIC) {
   (async () => {
     for await (const { task, taskService } of subscribe(client, topic)) {
-
       // Resolve lock expiration
       const lockExpiration =
         new Date(task.lockExpirationTime as string).getTime() -
@@ -46,7 +40,8 @@ for (const topic of CAMUNDA_TOPIC) {
       const tmpdir = await fs.mkdtempSync(path.join(os.tmpdir(), "robot-"));
 
       // Execute robot for task
-      const exec = spawn(path.join(ROBOT_PYTHON_ENV, "bin", "robot"),
+      const exec = spawn(
+        ROBOT_EXECUTABLE,
         [
           "--rpa",
           "--loglevel",
@@ -68,16 +63,20 @@ for (const topic of CAMUNDA_TOPIC) {
           `CAMUNDA_TASK_PROCESS_INSTANCE_ID:${task.processInstanceId}`,
           "--variable",
           `CAMUNDA_TASK_EXECUTION_ID:${task.executionId}`,
-          "--task",
-          task.topicName || "n/a",
-          ROBOT_SUITE,
-
-        ], {
-        cwd: tmpdir,
-        env: {
-          CAMUNDA_API_PATH,
-        },
-      });
+        ].concat(
+          ROBOT_TASK === undefined
+            ? ["--task", task.topicName as string, ROBOT_SUITE as string]
+            : ROBOT_TASK !== ""
+            ? ["--task", ROBOT_TASK as string, ROBOT_SUITE as string]
+            : [ROBOT_SUITE as string]
+        ),
+        {
+          cwd: tmpdir,
+          env: {
+            CAMUNDA_API_PATH,
+          },
+        }
+      );
 
       // Collect stdout
       let stdout = "";
@@ -93,7 +92,6 @@ for (const topic of CAMUNDA_TOPIC) {
 
       // Handle exit
       exec.on("close", async (code) => {
-
         // Stop extending expiration timeout
         clearTimeout(extendLockTimeout);
 
@@ -111,7 +109,7 @@ for (const topic of CAMUNDA_TOPIC) {
         }
       });
 
-      console.log("Handle", task.topicName, task.id);
+      console.log("Locked ", task.topicName, task.id);
     }
   })();
 }

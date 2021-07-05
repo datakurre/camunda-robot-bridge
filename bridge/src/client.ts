@@ -7,11 +7,10 @@ const CAMUNDA_API_PATH =
   process.env.CAMUNDA_API_PATH || "http://localhost:8080/engine-rest";
 
 const CLIENT_LOG_LEVEL = process.env.CLIENT_LOG_LEVEL || "debug";
-const CLIENT_MAX_TASKS =
-  parseInt(process.env.CLIENT_MAX_TASKS || "4", 10) || 4;
+const CLIENT_MAX_TASKS = parseInt(process.env.CLIENT_MAX_TASKS || "4", 10) || 4;
 const CLIENT_POLL_INTERVAL =
   parseInt(process.env.CLIENT_POLL_INTERVAL || "10000", 10) || 10000;
-const CLIENT_WORKER_ID = process.env.CLIENT_WORKER_ID || "camunda-robot-bridge";
+const CLIENT_WORKER_ID = process.env.CLIENT_WORKER_ID || "camunda-robotframework-bridge";
 
 const client = new Client({
   baseUrl: CAMUNDA_API_PATH,
@@ -33,7 +32,6 @@ export async function* subscribe(
   topic: string,
   options?: any
 ): AsyncIterable<HandlerArgs> {
-
   // Define asynchronous lock
   const locker: (() => void)[] = [];
   const Lock = () =>

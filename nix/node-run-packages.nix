@@ -385,8 +385,8 @@ let
     };
   };
   args = {
-    name = "camunda-robot-bridge";
-    packageName = "camunda-robot-bridge";
+    name = "camunda-robotframework-bridge";
+    packageName = "camunda-robotframework-bridge";
     version = "1.0.0";
     src = ./..;
     dependencies = [
@@ -439,7 +439,7 @@ let
     buildInputs = globalBuildInputs;
     meta = {
       description = "Camunda Robot Framework RPA Bridge";
-      homepage = "https://github.com/datakurre/camunda-robot-bridge#readme";
+      homepage = "https://github.com/datakurre/camunda-robotframework-bridge#readme";
       license = "ISC";
     };
     production = true;
