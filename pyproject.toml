@@ -9,6 +9,7 @@ packages = [
     { include = "carrot_executor/*.py" },
 ]
 include = [ "carrot_executor/index.js" ]
+readme = "README.md"
 
 [tool.poetry.scripts]
 carrot-executor = "carrot_executor:main"
