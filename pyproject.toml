@@ -1,17 +1,17 @@
 [tool.poetry]
 name = "camunda-robotframework-bridge"
-version = "0.3.0"
+version = "0.4.0"
 description = "Camunda Robot Framework Bridge"
 authors = ["Asko Soukka <asko.soukka@iki.fi>"]
 license = "MIT"
 packages = [
     { include = "*.py", from="lib" },
-    { include = "bridge/*.py" },
+    { include = "camunda_robotframework_bridge/*.py" },
 ]
-include = [ "bridge/index.js" ]
+include = [ "camunda_robotframework_bridge/index.js" ]
 
 [tool.poetry.scripts]
-camunda-robotframework-bridge = "bridge:main"
+camunda-robotframework-bridge = "camunda_robotframework_bridge:main"
 
 [tool.poetry.dependencies]
 python = "^3.8"
