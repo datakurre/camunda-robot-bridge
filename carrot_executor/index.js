@@ -8792,10 +8792,10 @@ async function* subscribe(client, topic, options) {
 main.config();
 const CAMUNDA_API_PATH = process.env.CAMUNDA_API_PATH || "http://localhost:8080/engine-rest";
 const CAMUNDA_TOPIC = (process.env.CAMUNDA_TOPIC || "Search for XKCD image,Download XKCD image").split(",");
-const ROBOT_EXECUTABLE = process.env.ROBOT_PATH || "robot";
+const ROBOT_EXECUTABLE = process.env.ROBOT_EXECUTABLE || "robot";
 const ROBOT_SUITE = process.env.ROBOT_SUITE || "n/a";
 const ROBOT_TASK = process.env.ROBOT_TASK || undefined;
-const ROBOT_LOG_LEVEL = process.env.ROBOT_LOG_LEVEL || "debug";
+const ROBOT_LOG_LEVEL = process.env.ROBOT_LOG_LEVEL || "info";
 for (const topic of CAMUNDA_TOPIC) {
     (async () => {
         for await (const { task, taskService } of subscribe(client, topic)) {
@@ -8804,7 +8804,9 @@ for (const topic of CAMUNDA_TOPIC) {
                 new Date().getTime();
             // Schedule to extend lock expiration in time
             const extendLock = async () => {
-                console.log("Extend lock", task.topicName, task.id);
+                if (ROBOT_LOG_LEVEL === "debug") {
+                    console.log("Extend lock", task.topicName, task.id);
+                }
                 await taskService.extendLock(task, lockExpiration);
                 extendLockTimeout = setTimeout(extendLock, lockExpiration / 2);
             };
@@ -8826,7 +8828,7 @@ for (const topic of CAMUNDA_TOPIC) {
                 "--variable",
                 `CAMUNDA_TASK_ID:${task.id}`,
                 "--variable",
-                `CAMUNDA_TASK_RETRIES:${task.retries}`,
+                `CAMUNDA_TASK_RETRIES:${Math.max(task.retries ? task.retries - 1 : 0, 0)}`,
                 "--variable",
                 `CAMUNDA_TASK_WORKER_ID:${task.workerId}`,
                 "--variable",
@@ -8841,6 +8843,7 @@ for (const topic of CAMUNDA_TOPIC) {
                 cwd: tmpdir,
                 env: {
                     CAMUNDA_API_PATH,
+                    PATH: process.env.PATH,
                 },
             });
             // Collect stdout
@@ -8861,15 +8864,19 @@ for (const topic of CAMUNDA_TOPIC) {
                 require$$0__default['default'].rmdirSync(tmpdir, { recursive: true });
                 // Fail task if execution fail unexpectedly
                 if (code !== 0) {
-                    console.log("Fail task for", task.topicName, task.id);
-                    console.log(stdout + stderr);
+                    if (ROBOT_LOG_LEVEL === "debug") {
+                        console.log("Fail task for", task.topicName, task.id);
+                        console.log(stdout + stderr);
+                    }
                     await taskService.handleFailure(task, {
                         errorMessage: `${stdout || stderr}`,
                         errorDetails: `${stderr || stdout}`,
                     });
                 }
             });
-            console.log("Locked ", task.topicName, task.id);
+            if (ROBOT_LOG_LEVEL === "debug") {
+                console.log("Locked", task.topicName, task.id);
+            }
         }
     })();
 }
