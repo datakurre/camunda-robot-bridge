@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "carrot-executor"
-version = "0.6.6"
+version = "0.7.0"
 description = "Camunda external task Robot Framework execution scheduler"
 homepage = "https://github.com/datakurre/carrot-executor"
 authors = ["Asko Soukka <asko.soukka@iki.fi>"]
@@ -9,7 +9,7 @@ packages = [
     { include = "*.py", from="lib" },
     { include = "carrot_executor/*.py" },
 ]
-include = [ "carrot_executor/index.js" ]
+include = [ "CHANGELOG.md", "carrot_executor/index.js" ]
 readme = "README.md"
 
 [tool.poetry.scripts]

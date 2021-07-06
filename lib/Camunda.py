@@ -9,9 +9,8 @@ from CamundaOpenAPI import VariableValueDto
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.DateTime import convert_time
 from typing import Any
-from typing import Dict
+from typing import Callable
 from typing import List
-from typing import Optional
 import datetime
 import json
 import mimetypes
@@ -20,10 +19,11 @@ import requests
 
 
 try:
-    CAMUNDA_API_PATH = os.environ["CAMUNDA_API_PATH"]
+    CAMUNDA_API_BASE_URL = os.environ["CAMUNDA_API_BASE_URL"]
+    CAMUNDA_API_AUTHORIZATION = os.environ.get("CAMUNDA_API_AUTHORIZATION")
 except KeyError as e:
     raise RuntimeError(
-        "CAMUNDA_API_PATH environment variable not set. "
+        "CAMUNDA_API_BASE_URL environment variable not set. "
         "It must be an URL for Camunda REST API root, for example, "
         '"http://camunda:8080/engine_rest".'
     ) from e
@@ -45,6 +45,13 @@ def datetime_handler(value):
     raise TypeError(f"Object of type {type(value)} is not JSON serializable")
 
 
+def auth(r: requests.models.Request) -> requests.models.Request:
+    """Set Authorization header for Camunda API request from environment variable."""
+    if CAMUNDA_API_AUTHORIZATION:
+        r.headers["Authorization"] = CAMUNDA_API_AUTHORIZATION
+    return r
+
+
 class Camunda:
     """Camunda External Task Library allows fetching external tasks
     and their variables from Camunda Platform, and returning variables
@@ -54,7 +61,7 @@ class Camunda:
     which manages completing tasks on the base of Robot Framework RPA
     execution result:
 
-        $ robot --rpa --listener CamundaListener ...
+    | $ robot --rpa --listener CamundaListener ...
 
     """
 
@@ -86,7 +93,7 @@ class Camunda:
         Any other keyword arguments are passed as additional process
         *variables* filter to select available tasks with the same topic.
         """
-        url = f"{CAMUNDA_API_PATH}/external-task/fetchAndLock"
+        url = f"{CAMUNDA_API_BASE_URL}/external-task/fetchAndLock"
         payload = FetchExternalTasksDto(
             workerId=worker_id,
             maxTasks=1,
@@ -102,7 +109,7 @@ class Camunda:
             ],
         )
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        response = requests.post(url, headers=headers, data=payload.json())
+        response = requests.post(url, headers=headers, data=payload.json(), auth=auth)
         assert response.status_code == 200, f"{response.status_code}: {response.text}"
 
         # Set task variables for CamundaLibrary
@@ -129,6 +136,27 @@ class Camunda:
         """Set to retry given times on Camunda external task failure."""
         BuiltIn().set_suite_variable(CAMUNDA_TASK_RETRIES, retries)
 
+    def get_api_auth(
+        self,
+    ) -> Callable[[requests.models.Request], requests.models.Request]:
+        """Get auth argument value for custom Camunda API requests using requests
+        library.
+
+        Example:
+
+        | ***** Settings *****
+        |
+        | Library  requests
+        |
+        | ***** Tasks *****
+        |
+        | Log Camunda version
+        |     ${auth}=  Get Camunda API requests auth
+        |     ${version}=  Get  %{CAMUNDA_API_BASE_URL}/version  auth=${auth}
+        |     Log  ${version}
+        """
+        return auth
+
     def get_external_task_variable(self, name: str) -> Any:
         """Read an external task variable value from Camunda.
 
@@ -140,16 +168,16 @@ class Camunda:
         params = {"deserializeValue": "false"}
         variables = BuiltIn().get_variables()
         url = (
-            f"{CAMUNDA_API_PATH}/execution/"
+            f"{CAMUNDA_API_BASE_URL}/execution/"
             f"{variables[CAMUNDA_TASK_EXECUTION_ID]}/localVariables/{name}"
         )
-        response = requests.get(url, headers=headers, params=params)
+        response = requests.get(url, headers=headers, params=params, auth=auth)
         if response.status_code == 404:
             url = (
-                f"{CAMUNDA_API_PATH}/process-instance/"
+                f"{CAMUNDA_API_BASE_URL}/process-instance/"
                 f"{variables[CAMUNDA_TASK_PROCESS_INSTANCE_ID]}/variables/{name}"
             )
-            response = requests.get(url, headers=headers, params=params)
+            response = requests.get(url, headers=headers, params=params, auth=auth)
         assert response.status_code == 200, response.text
         variable = VariableValueDto(**response.json())
         if (
@@ -166,7 +194,7 @@ class Camunda:
             and variable.valueInfo.get("filename")
         ):
             url = f"{url}/data"
-            response = requests.get(url)
+            response = requests.get(url, auth=auth)
             assert response.status_code == 200, response.text
             with open(variable.valueInfo["filename"], "wb") as fp:
                 fp.write(response.content)
@@ -206,9 +234,9 @@ class Camunda:
                 value = b64encode(fp.read())
         variable = VariableValueDto(value=value, type=type, valueInfo=info)
         url = (
-            f"{CAMUNDA_API_PATH}/execution/"
+            f"{CAMUNDA_API_BASE_URL}/execution/"
             f"{variables[CAMUNDA_TASK_EXECUTION_ID]}/localVariables"
         )
         payload = PatchVariablesDto(modifications={name: variable})
-        response = requests.post(url, headers=headers, data=payload.json())
+        response = requests.post(url, headers=headers, data=payload.json(), auth=auth)
         assert response.status_code == 204, response.text

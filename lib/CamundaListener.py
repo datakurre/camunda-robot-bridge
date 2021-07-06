@@ -79,13 +79,15 @@ def inline_screenshots(output: str):
 
 
 try:
-    CAMUNDA_API_PATH = os.environ["CAMUNDA_API_PATH"]
+    CAMUNDA_API_BASE_URL = os.environ["CAMUNDA_API_BASE_URL"]
+    CAMUNDA_API_AUTHORIZATION = os.environ.get("CAMUNDA_API_AUTHORIZATION")
 except KeyError as e:
     raise RuntimeError(
-        "CAMUNDA_API_PATH environment variable not set. "
+        "CAMUNDA_API_BASE_URL environment variable not set. "
         "It must be an URL for Camunda REST API root, for example, "
         '"http://camunda:8080/engine_rest".'
     ) from e
+
 CAMUNDA_TASK_ERROR_CODE = "${CAMUNDA_TASK_ERROR_CODE}"
 CAMUNDA_TASK_ERROR_MESSAGE = "${CAMUNDA_TASK_ERROR_MESSAGE}"
 CAMUNDA_TASK_EXECUTION_ID = "${CAMUNDA_TASK_EXECUTION_ID}"
@@ -93,6 +95,13 @@ CAMUNDA_TASK_ID = "${CAMUNDA_TASK_ID}"
 CAMUNDA_TASK_PROCESS_INSTANCE_ID = "${CAMUNDA_TASK_PROCESS_INSTANCE_ID}"
 CAMUNDA_TASK_RETRIES = "${CAMUNDA_TASK_RETRIES}"
 CAMUNDA_TASK_WORKER_ID = "${CAMUNDA_TASK_WORKER_ID}"
+
+
+def auth(r: requests.models.Request) -> requests.models.Request:
+    """Set Authorization header for Camunda API request from environment variable."""
+    if CAMUNDA_API_AUTHORIZATION:
+        r.headers["Authorization"] = CAMUNDA_API_AUTHORIZATION
+    return r
 
 
 class Status(str, Enum):
@@ -208,14 +217,14 @@ class CamundaListener:
                     "encoding": "utf-8",
                 },
             )
-        url = f"{CAMUNDA_API_PATH}/execution/{self.execution_id}/localVariables"
+        url = f"{CAMUNDA_API_BASE_URL}/execution/{self.execution_id}/localVariables"
         payload = PatchVariablesDto(modifications={"log": log_html})
-        response = requests.post(url, headers=headers, data=payload.json())
+        response = requests.post(url, headers=headers, data=payload.json(), auth=auth)
         if response.status_code != 204:
             raise RobotError(f"{response.status_code} {response.text}")
 
         # 4)
-        task_url = f"{CAMUNDA_API_PATH}/external-task/{self.task_id}"
+        task_url = f"{CAMUNDA_API_BASE_URL}/external-task/{self.task_id}"
         if self.error_code and self.error_message:
             logger.debug("CamundaListener: * report BPMN error")
             url = f"{task_url}/bpmnError"
@@ -245,7 +254,7 @@ class CamundaListener:
             logger.debug(url)
             logger.debug(headers)
             logger.debug(payload.json())
-        response = requests.post(url, headers=headers, data=payload.json())
+        response = requests.post(url, headers=headers, data=payload.json(), auth=auth)
         logger.debug(f"CamundaListener: {response}")
         if response.status_code != 204:
             logger.debug("CamundaListener: * report error")
@@ -258,7 +267,9 @@ class CamundaListener:
                 errorDetails=response.text,
                 retries=0,
             )
-            response = requests.post(url, headers=headers, data=payload.json())
+            response = requests.post(
+                url, headers=headers, data=payload.json(), auth=auth
+            )
             if response.status_code != 204:
                 raise RobotError(f"{response.status_code} {response.text}")
 

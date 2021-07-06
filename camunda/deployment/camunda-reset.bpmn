@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_09inx8l" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.8.1">
-  <bpmn:process id="camunda-reset" name="Reset Camunda to clear state" isExecutable="true" camunda:historyTimeToLive="P1D">
+  <bpmn:process id="camunda-reset" name="Reset Camunda to clean state" isExecutable="true" camunda:historyTimeToLive="P1D">
     <bpmn:startEvent id="Event_0zxlavb" name="Request empty Camunda">
       <bpmn:outgoing>Flow_0e57r2k</bpmn:outgoing>
     </bpmn:startEvent>
@@ -23,11 +23,11 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1wc9j4m" sourceRef="Gateway_1jcii6b" targetRef="Event_11w8z3j" />
     <bpmn:sequenceFlow id="Flow_0xjviwl" sourceRef="Activity_14dufgr" targetRef="Gateway_1jcii6b" />
-    <bpmn:serviceTask id="Activity_0gkkssc" name="Reset deployments" camunda:type="external" camunda:topic="Delete all deployments">
+    <bpmn:serviceTask id="Activity_0gkkssc" name="Reset deployments" camunda:type="external" camunda:topic="Reset deployments">
       <bpmn:incoming>Flow_15rh19q</bpmn:incoming>
       <bpmn:outgoing>Flow_1329rr6</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Activity_14dufgr" name="Reset tasklist filters" camunda:type="external" camunda:topic="Delete all tasklist filters">
+    <bpmn:serviceTask id="Activity_14dufgr" name="Reset tasklist filters" camunda:type="external" camunda:topic="Reset tasklist filters">
       <bpmn:incoming>Flow_0auj3hy</bpmn:incoming>
       <bpmn:outgoing>Flow_0xjviwl</bpmn:outgoing>
     </bpmn:serviceTask>

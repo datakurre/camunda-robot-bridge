@@ -9,16 +9,40 @@ import client, { subscribe } from "./client";
 
 dotenv.config();
 
-const CAMUNDA_API_PATH =
-  process.env.CAMUNDA_API_PATH || "http://localhost:8080/engine-rest";
-const CAMUNDA_TOPIC = (
-  process.env.CAMUNDA_TOPIC || "Search for XKCD image,Download XKCD image"
-).split(",");
+const CAMUNDA_API_BASE_URL = process.env.CAMUNDA_API_BASE_URL;
+const CAMUNDA_API_AUTHORIZATION = process.env.CAMUNDA_API_AUTHORIZATION;
+const CAMUNDA_TOPIC = (process.env.CAMUNDA_TOPIC || "")
+  .split(",")
+  .map((topic: string) => topic.trim())
+  .filter((topic: string) => topic);
 
+if (!CAMUNDA_API_BASE_URL) {
+  console.log("Environment variable CAMUNDA_API_BASE_URL must be set.");
+  process.exit(1);
+}
+
+if (!CAMUNDA_TOPIC.length) {
+  console.log("Environment variable CAMUNDA_TOPIC must be set.");
+  process.exit(1);
+}
+
+// Note: The following variables are specific to local executor:
 const ROBOT_EXECUTABLE = process.env.ROBOT_EXECUTABLE || "robot";
-const ROBOT_SUITE = process.env.ROBOT_SUITE || "n/a";
+const ROBOT_SUITE = process.env.ROBOT_SUITE;
 const ROBOT_TASK = process.env.ROBOT_TASK || undefined;
 const ROBOT_LOG_LEVEL = process.env.ROBOT_LOG_LEVEL || "info";
+
+if (!ROBOT_SUITE) {
+  console.log("Environment variable ROBOT_SUITE must be set.");
+  process.exit(1);
+}
+if (!fs.existsSync(ROBOT_SUITE)) {
+  console.log(`Suite ${ROBOT_SUITE} does not exist.`);
+  process.exit(1);
+}
+
+const toAbsolute = (p: string): string =>
+  fs.existsSync(p) && !path.isAbsolute(p) ? path.join(process.cwd(), p) : p;
 
 for (const topic of CAMUNDA_TOPIC) {
   (async () => {
@@ -37,6 +61,8 @@ for (const topic of CAMUNDA_TOPIC) {
         extendLockTimeout = setTimeout(extendLock, lockExpiration / 2);
       };
       let extendLockTimeout = setTimeout(extendLock, lockExpiration / 2);
+
+      // Note: Local executor specific code begins
 
       // Create temporary task work directory
       const tmpdir = await fs.mkdtempSync(path.join(os.tmpdir(), "robot-"));
@@ -70,15 +96,16 @@ for (const topic of CAMUNDA_TOPIC) {
           `CAMUNDA_TASK_EXECUTION_ID:${task.executionId}`,
         ].concat(
           ROBOT_TASK === undefined
-            ? ["--task", task.topicName as string, ROBOT_SUITE as string]
+            ? ["--task", task.topicName as string, toAbsolute(ROBOT_SUITE)]
             : ROBOT_TASK !== ""
-            ? ["--task", ROBOT_TASK as string, ROBOT_SUITE as string]
-            : [ROBOT_SUITE as string]
+            ? ["--task", ROBOT_TASK as string, toAbsolute(ROBOT_SUITE)]
+            : [toAbsolute(ROBOT_SUITE)]
         ),
         {
           cwd: tmpdir,
           env: {
-            CAMUNDA_API_PATH,
+            CAMUNDA_API_BASE_URL,
+            CAMUNDA_API_AUTHORIZATION,
             PATH: process.env.PATH,
           },
         }
@@ -114,6 +141,9 @@ for (const topic of CAMUNDA_TOPIC) {
             errorMessage: `${stdout || stderr}`,
             errorDetails: `${stderr || stdout}`,
           });
+        }
+        if (ROBOT_LOG_LEVEL === "debug") {
+          console.log(stdout + stderr);
         }
       });
       if (ROBOT_LOG_LEVEL === "debug") {

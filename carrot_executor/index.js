@@ -2,13 +2,13 @@
 
 var child_process = require('child_process');
 var require$$0 = require('fs');
-var require$$2 = require('os');
-var require$$1 = require('path');
+var os$3 = require('os');
+var path$2 = require('path');
 var require$$0$3 = require('events');
 var require$$0$4 = require('url');
 var require$$0$2 = require('buffer');
 var require$$0$1 = require('stream');
-var require$$1$1 = require('util');
+var require$$1 = require('util');
 var require$$3 = require('http');
 var require$$4 = require('https');
 var require$$0$5 = require('dns');
@@ -18,13 +18,13 @@ var require$$0$7 = require('net');
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 var require$$0__default = /*#__PURE__*/_interopDefaultLegacy(require$$0);
-var require$$2__default = /*#__PURE__*/_interopDefaultLegacy(require$$2);
-var require$$1__default = /*#__PURE__*/_interopDefaultLegacy(require$$1);
+var os__default = /*#__PURE__*/_interopDefaultLegacy(os$3);
+var path__default = /*#__PURE__*/_interopDefaultLegacy(path$2);
 var require$$0__default$3 = /*#__PURE__*/_interopDefaultLegacy(require$$0$3);
 var require$$0__default$4 = /*#__PURE__*/_interopDefaultLegacy(require$$0$4);
 var require$$0__default$2 = /*#__PURE__*/_interopDefaultLegacy(require$$0$2);
 var require$$0__default$1 = /*#__PURE__*/_interopDefaultLegacy(require$$0$1);
-var require$$1__default$1 = /*#__PURE__*/_interopDefaultLegacy(require$$1$1);
+var require$$1__default = /*#__PURE__*/_interopDefaultLegacy(require$$1);
 var require$$3__default = /*#__PURE__*/_interopDefaultLegacy(require$$3);
 var require$$4__default = /*#__PURE__*/_interopDefaultLegacy(require$$4);
 var require$$0__default$5 = /*#__PURE__*/_interopDefaultLegacy(require$$0$5);
@@ -62,8 +62,8 @@ type DotenvConfigOutput = {
 */
 
 const fs$2 = require$$0__default['default'];
-const path$1 = require$$1__default['default'];
-const os$2 = require$$2__default['default'];
+const path$1 = path__default['default'];
+const os$2 = os__default['default'];
 
 function log (message /*: string */) {
   console.log(`[dotenv][DEBUG] ${message}`);
@@ -2533,8 +2533,8 @@ toReadableStream$1.exports.default = toReadableStream;
 var cacheableLookup = {exports: {}};
 
 const {Resolver, V4MAPPED, ADDRCONFIG} = require$$0__default$5['default'];
-const {promisify} = require$$1__default$1['default'];
-const os$1 = require$$2__default['default'];
+const {promisify} = require$$1__default['default'];
+const os$1 = os__default['default'];
 const Keyv = src$1;
 
 const kCacheableLookupData = Symbol('cacheableLookupData');
@@ -2777,7 +2777,7 @@ isFormData.default = (body) => is_1$8.default.nodeStream(body) && is_1$8.default
 
 Object.defineProperty(getBodySize, "__esModule", { value: true });
 const fs_1$1 = require$$0__default['default'];
-const util_1$2 = require$$1__default$1['default'];
+const util_1$2 = require$$1__default['default'];
 const is_1$7 = dist.exports;
 const is_form_data_1 = isFormData;
 const statAsync = util_1$2.promisify(fs_1$1.stat);
@@ -2934,7 +2934,7 @@ types.requestSymbol = Symbol('request');
 (function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const url_1 = require$$0__default$4['default'];
-const util_1 = require$$1__default$1['default'];
+const util_1 = require$$1__default['default'];
 const CacheableRequest = src;
 const http = require$$3__default['default'];
 const https = require$$4__default['default'];
@@ -3715,7 +3715,7 @@ Object.defineProperty(getResponse, "__esModule", { value: true });
 const decompressResponse = decompressResponse_1;
 const mimicResponse = mimicResponse$2;
 const stream$2 = require$$0__default$1['default'];
-const util_1$1 = require$$1__default$1['default'];
+const util_1$1 = require$$1__default['default'];
 const progress_1$1 = progress;
 const pipeline$1 = util_1$1.promisify(stream$2.pipeline);
 getResponse.default = async (response, options, emitter) => {
@@ -4286,7 +4286,7 @@ const EventEmitter$1 = require$$0__default$3['default'];
 const http = require$$3__default['default'];
 const stream$1 = require$$0__default$1['default'];
 const url_1 = require$$0__default$4['default'];
-const util_1 = require$$1__default$1['default'];
+const util_1 = require$$1__default['default'];
 const is_1$2 = dist.exports;
 const http_timer_1 = source$1.exports;
 const calculate_retry_delay_1 = calculateRetryDelay$1;
@@ -5536,8 +5536,8 @@ var errors = {
  */
 
 const fs = require$$0__default['default'];
-const util = require$$1__default$1['default'];
-const path = require$$1__default['default'];
+const util = require$$1__default['default'];
+const path = path__default['default'];
 
 const { MISSING_FILE_OPTIONS } = errors;
 
@@ -7855,7 +7855,7 @@ var hasFlag$1 = (flag, argv) => {
 	return pos !== -1 && (terminatorPos === -1 ? true : pos < terminatorPos);
 };
 
-const os = require$$2__default['default'];
+const os = os__default['default'];
 const hasFlag = hasFlag$1;
 
 const env = process.env;
@@ -8743,20 +8743,33 @@ var camundaExternalTaskClientJs = {
 };
 
 main.config();
-const CAMUNDA_API_PATH$1 = process.env.CAMUNDA_API_PATH || "http://localhost:8080/engine-rest";
+const CAMUNDA_API_BASE_URL$1 = process.env.CAMUNDA_API_BASE_URL || "http://localhost:8080/engine-rest";
+const CAMUNDA_API_AUTHORIZATION$1 = process.env.CAMUNDA_API_AUTHORIZATION;
 const CLIENT_LOG_LEVEL = process.env.CLIENT_LOG_LEVEL || "debug";
-const CLIENT_MAX_TASKS = parseInt(process.env.CLIENT_MAX_TASKS || "4", 10) || 4;
+const CLIENT_MAX_TASKS = Math.max(parseInt(process.env.CLIENT_MAX_TASKS || `${os__default['default'].cpus().length}`, 10) ||
+    os__default['default'].cpus().length, 0);
 const CLIENT_POLL_INTERVAL = parseInt(process.env.CLIENT_POLL_INTERVAL || "10000", 10) || 10000;
 const CLIENT_WORKER_ID = process.env.CLIENT_WORKER_ID || "carrot-executor";
+const AuthorizationHeaderInterceptor = (config) => {
+    return CAMUNDA_API_AUTHORIZATION$1
+        ? {
+            ...config,
+            headers: {
+                ...config.headers,
+                Authorization: CAMUNDA_API_AUTHORIZATION$1,
+            },
+        }
+        : config;
+};
 const client = new camundaExternalTaskClientJs.Client({
-    baseUrl: CAMUNDA_API_PATH$1,
+    baseUrl: CAMUNDA_API_BASE_URL$1,
     workerId: CLIENT_WORKER_ID,
     maxTasks: CLIENT_MAX_TASKS,
     maxParallelExecutions: CLIENT_MAX_TASKS,
     interval: CLIENT_POLL_INTERVAL,
     lockDuration: CLIENT_POLL_INTERVAL,
     autoPoll: true,
-    interceptors: undefined,
+    interceptors: [AuthorizationHeaderInterceptor],
     asyncResponseTimeout: CLIENT_POLL_INTERVAL,
     use: camundaExternalTaskClientJs.logger.level(CLIENT_LOG_LEVEL),
 });
@@ -8790,12 +8803,34 @@ async function* subscribe(client, topic, options) {
 }
 
 main.config();
-const CAMUNDA_API_PATH = process.env.CAMUNDA_API_PATH || "http://localhost:8080/engine-rest";
-const CAMUNDA_TOPIC = (process.env.CAMUNDA_TOPIC || "Search for XKCD image,Download XKCD image").split(",");
+const CAMUNDA_API_BASE_URL = process.env.CAMUNDA_API_BASE_URL;
+const CAMUNDA_API_AUTHORIZATION = process.env.CAMUNDA_API_AUTHORIZATION;
+const CAMUNDA_TOPIC = (process.env.CAMUNDA_TOPIC || "")
+    .split(",")
+    .map((topic) => topic.trim())
+    .filter((topic) => topic);
+if (!CAMUNDA_API_BASE_URL) {
+    console.log("Environment variable CAMUNDA_API_BASE_URL must be set.");
+    process.exit(1);
+}
+if (!CAMUNDA_TOPIC.length) {
+    console.log("Environment variable CAMUNDA_TOPIC must be set.");
+    process.exit(1);
+}
+// Note: The following variables are specific to local executor:
 const ROBOT_EXECUTABLE = process.env.ROBOT_EXECUTABLE || "robot";
-const ROBOT_SUITE = process.env.ROBOT_SUITE || "n/a";
+const ROBOT_SUITE = process.env.ROBOT_SUITE;
 const ROBOT_TASK = process.env.ROBOT_TASK || undefined;
 const ROBOT_LOG_LEVEL = process.env.ROBOT_LOG_LEVEL || "info";
+if (!ROBOT_SUITE) {
+    console.log("Environment variable ROBOT_SUITE must be set.");
+    process.exit(1);
+}
+if (!require$$0__default['default'].existsSync(ROBOT_SUITE)) {
+    console.log(`Suite ${ROBOT_SUITE} does not exist.`);
+    process.exit(1);
+}
+const toAbsolute = (p) => require$$0__default['default'].existsSync(p) && !path__default['default'].isAbsolute(p) ? path__default['default'].join(process.cwd(), p) : p;
 for (const topic of CAMUNDA_TOPIC) {
     (async () => {
         for await (const { task, taskService } of subscribe(client, topic)) {
@@ -8811,8 +8846,9 @@ for (const topic of CAMUNDA_TOPIC) {
                 extendLockTimeout = setTimeout(extendLock, lockExpiration / 2);
             };
             let extendLockTimeout = setTimeout(extendLock, lockExpiration / 2);
+            // Note: Local executor specific code begins
             // Create temporary task work directory
-            const tmpdir = await require$$0__default['default'].mkdtempSync(require$$1__default['default'].join(require$$2__default['default'].tmpdir(), "robot-"));
+            const tmpdir = await require$$0__default['default'].mkdtempSync(path__default['default'].join(os__default['default'].tmpdir(), "robot-"));
             // Execute robot for task
             const exec = child_process.spawn(ROBOT_EXECUTABLE, [
                 "--rpa",
@@ -8836,13 +8872,14 @@ for (const topic of CAMUNDA_TOPIC) {
                 "--variable",
                 `CAMUNDA_TASK_EXECUTION_ID:${task.executionId}`,
             ].concat(ROBOT_TASK === undefined
-                ? ["--task", task.topicName, ROBOT_SUITE]
+                ? ["--task", task.topicName, toAbsolute(ROBOT_SUITE)]
                 : ROBOT_TASK !== ""
-                    ? ["--task", ROBOT_TASK, ROBOT_SUITE]
-                    : [ROBOT_SUITE]), {
+                    ? ["--task", ROBOT_TASK, toAbsolute(ROBOT_SUITE)]
+                    : [toAbsolute(ROBOT_SUITE)]), {
                 cwd: tmpdir,
                 env: {
-                    CAMUNDA_API_PATH,
+                    CAMUNDA_API_BASE_URL,
+                    CAMUNDA_API_AUTHORIZATION,
                     PATH: process.env.PATH,
                 },
             });
@@ -8872,6 +8909,9 @@ for (const topic of CAMUNDA_TOPIC) {
                         errorMessage: `${stdout || stderr}`,
                         errorDetails: `${stderr || stdout}`,
                     });
+                }
+                if (ROBOT_LOG_LEVEL === "debug") {
+                    console.log(stdout + stderr);
                 }
             });
             if (ROBOT_LOG_LEVEL === "debug") {
