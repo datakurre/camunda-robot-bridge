@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "carrot-executor"
-version = "0.7.0"
+version = "0.7.1"
 description = "Camunda external task Robot Framework execution scheduler"
 homepage = "https://github.com/datakurre/carrot-executor"
 authors = ["Asko Soukka <asko.soukka@iki.fi>"]
