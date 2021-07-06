@@ -63,7 +63,7 @@ $ pip install carrot-executor
 The executor may now be started with parameterizing it to complete tasks from the process we started:
 
 ```bash
-$ CAMUNDA_API_BASE_URL=http://localhost:8080/engine-rest ROBOT_SUITE=$(pwd)/robot/reset.robot CAMUNDA_TOPIC="Reset tasklist filters,Reset deployments" carrot-executor
+$ CAMUNDA_API_BASE_URL=http://localhost:8080/engine-rest ROBOT_SUITE=robot/reset.robot CAMUNDA_TOPIC="Reset tasklist filters,Reset deployments" carrot-executor
 polling
 ✓ subscribed to topic Reset tasklist filters
 ✓ subscribed to topic Reset deployments
