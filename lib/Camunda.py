@@ -151,7 +151,7 @@ class Camunda:
         | ***** Tasks *****
         |
         | Log Camunda version
-        |     ${auth}=  Get Camunda API requests auth
+        |     ${auth}=  Get API auth
         |     ${version}=  Get  %{CAMUNDA_API_BASE_URL}/version  auth=${auth}
         |     Log  ${version}
         """
