@@ -146,6 +146,7 @@ class Camunda:
 
         | ***** Settings *****
         |
+        | Library  Camunda
         | Library  requests
         |
         | ***** Tasks *****
