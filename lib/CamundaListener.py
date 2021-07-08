@@ -25,6 +25,15 @@ import re
 import requests
 import sys
 
+try:
+    from RPA.Robocloud.Items import Items
+    from RPA.Robocloud.Secrets import Secrets
+
+    HAS_RPA_FRAMEWORK = True
+except ImportError:
+    HAS_RPA_FRAMEWORK = False
+HAS_RC_ENV = {"RC_WORKSPACE_ID", "RC_WORKITEM_ID"}.issubset(os.environ.keys())
+
 
 def data_uri(mimetype: str, data: bytes):
     """Return a data URI with given mimetype for given bytes."""
@@ -81,6 +90,13 @@ def inline_screenshots(output: str):
 try:
     CAMUNDA_API_BASE_URL = os.environ["CAMUNDA_API_BASE_URL"]
     CAMUNDA_API_AUTHORIZATION = os.environ.get("CAMUNDA_API_AUTHORIZATION")
+    if not CAMUNDA_API_AUTHORIZATION and HAS_RC_ENV:
+        try:
+            CAMUNDA_API_AUTHORIZATION = Secrets().get_secret(
+                os.environ.get("CAMUNDA_SECRET_NAME") or "camunda"
+            )["CAMUNDA_API_AUTHORIZATION"]
+        except KeyError:
+            pass
 except KeyError as e:
     raise RuntimeError(
         "CAMUNDA_API_BASE_URL environment variable not set. "
@@ -136,6 +152,16 @@ class CamundaListener:
     def set_retries_on_failure(self, retries: int):
         """Set automatic retries on failure."""
         self.retries = retries
+
+    def start_suite(self, data, result: TestCaseResult):
+        """Read variables from work item on RoboCloud."""
+        if HAS_RC_ENV and HAS_RPA_FRAMEWORK:
+            builtin = BuiltIn()
+            library = Items()
+            library.load_work_item_from_environment()
+            for name, value in library.get_work_item_variables().items():
+                if name.startswith("CAMUNDA_"):
+                    builtin.set_suite_variable(f"${{{name}}}", value)
 
     def end_test(self, data: TestCaseData, result: TestCaseResult):
         """Save possible test execution failure and error messages.
