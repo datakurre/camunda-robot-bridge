@@ -94,6 +94,15 @@ let
         sha512 = "pouW8/FmiPQbuGpkXQ9BAPv/Mo5xDGANgSNXzTzJ8DrKGuXOssM4wIQRjfanNRh3Yu5cfYPvcorqbhg2KIJtew==";
       };
     };
+    "call-bind-1.0.2" = {
+      name = "call-bind";
+      packageName = "call-bind";
+      version = "1.0.2";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/call-bind/-/call-bind-1.0.2.tgz";
+        sha512 = "7O+FbCihrB5WGbFYesctwmTKae6rOiIzmz1icreWJ+0aA7LJfuqhEso2T9ncpcFtzMQtzXf2QGGueWJGTYsqrA==";
+      };
+    };
     "camunda-external-task-client-js-git+https://github.com/camunda/camunda-external-task-client-js.git#5923f9a3e98af20aedb3481662f3fdc8f9ef9f81" = {
       name = "camunda-external-task-client-js";
       packageName = "camunda-external-task-client-js";
@@ -194,6 +203,24 @@ let
         sha1 = "1b61c0562190a8dff6ae3bb2cf0200ca130b86d4";
       };
     };
+    "function-bind-1.1.1" = {
+      name = "function-bind";
+      packageName = "function-bind";
+      version = "1.1.1";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/function-bind/-/function-bind-1.1.1.tgz";
+        sha512 = "yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==";
+      };
+    };
+    "get-intrinsic-1.1.1" = {
+      name = "get-intrinsic";
+      packageName = "get-intrinsic";
+      version = "1.1.1";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.1.1.tgz";
+        sha512 = "kWZrnVM42QCiEA2Ig1bG8zjoIMOgxWwYCEeNdwY6Tv/cOSeGpcoX4pXHfKUxNKVoArnrEr2e9srnAxxGIraS9Q==";
+      };
+    };
     "get-stream-5.2.0" = {
       name = "get-stream";
       packageName = "get-stream";
@@ -212,6 +239,15 @@ let
         sha512 = "aWTDeNw9g+XqEZNcTjMMZSy7B7yE9toWOFYip7ofFTLleJhvZwUxxTxkTpKvF+p1SAA4VHmuEy7PiHTHyq8tJg==";
       };
     };
+    "has-1.0.3" = {
+      name = "has";
+      packageName = "has";
+      version = "1.0.3";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/has/-/has-1.0.3.tgz";
+        sha512 = "f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw==";
+      };
+    };
     "has-flag-3.0.0" = {
       name = "has-flag";
       packageName = "has-flag";
@@ -219,6 +255,15 @@ let
       src = fetchurl {
         url = "https://registry.npmjs.org/has-flag/-/has-flag-3.0.0.tgz";
         sha1 = "b5d454dc2199ae225699f3467e5a07f3b955bafd";
+      };
+    };
+    "has-symbols-1.0.2" = {
+      name = "has-symbols";
+      packageName = "has-symbols";
+      version = "1.0.2";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/has-symbols/-/has-symbols-1.0.2.tgz";
+        sha512 = "chXa79rL/UC2KlX17jo3vRGz0azaWEx5tGqZg5pO3NUyEJVB17dMruQlzCCOfUvElghKcm5194+BCRvi2Rv/Gw==";
       };
     };
     "http-cache-semantics-4.1.0" = {
@@ -284,6 +329,15 @@ let
         sha512 = "DlL+XwOy3NxAQ8xuC0okPgK46iuVNAK01YN7RueYBqqFeGsBjV9XmCAzAdgt+667bCl5kPh9EqKKDwnaPG1I7A==";
       };
     };
+    "object-inspect-1.10.3" = {
+      name = "object-inspect";
+      packageName = "object-inspect";
+      version = "1.10.3";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/object-inspect/-/object-inspect-1.10.3.tgz";
+        sha512 = "e5mCJlSH7poANfC8z8S9s9S2IN5/4Zb3aZ33f5s8YqoazCFzNLloLU8r5VCG+G7WoqLvAAZoVMcy3tp/3X0Plw==";
+      };
+    };
     "once-1.4.0" = {
       name = "once";
       packageName = "once";
@@ -338,6 +392,15 @@ let
         sha512 = "LwZy+p3SFs1Pytd/jYct4wpv49HiYCqd9Rlc5ZVdk0V+8Yzv6jR5Blk3TRmPL1ft69TxP0IMZGJ+WPFU2BFhww==";
       };
     };
+    "qs-6.10.1" = {
+      name = "qs";
+      packageName = "qs";
+      version = "6.10.1";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/qs/-/qs-6.10.1.tgz";
+        sha512 = "M528Hph6wsSVOBiYUnGf+K/7w0hNshs/duGsNXPUCLH5XAqjEtiPGwNONLV0tBH8NoGb0mvD5JubnUTrujKDTg==";
+      };
+    };
     "responselike-2.0.0" = {
       name = "responselike";
       packageName = "responselike";
@@ -345,6 +408,15 @@ let
       src = fetchurl {
         url = "https://registry.npmjs.org/responselike/-/responselike-2.0.0.tgz";
         sha512 = "xH48u3FTB9VsZw7R+vvgaKeLKzT6jOogbQhEe/jewwnZgzPcnyWui2Av6JpoYZF/91uueC+lqhWqeURw5/qhCw==";
+      };
+    };
+    "side-channel-1.0.4" = {
+      name = "side-channel";
+      packageName = "side-channel";
+      version = "1.0.4";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/side-channel/-/side-channel-1.0.4.tgz";
+        sha512 = "q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==";
       };
     };
     "supports-color-5.5.0" = {
@@ -365,6 +437,15 @@ let
         sha512 = "o3Qa6DGg1CEXshSdvWNX2sN4QHqg03SPq7U6jPXRahlQdl5dK8oXjkU/2/sGrnOZKeGV1zLSO8qPwyKklPPE7w==";
       };
     };
+    "tunnel-0.0.6" = {
+      name = "tunnel";
+      packageName = "tunnel";
+      version = "0.0.6";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/tunnel/-/tunnel-0.0.6.tgz";
+        sha512 = "1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg==";
+      };
+    };
     "type-fest-0.10.0" = {
       name = "type-fest";
       packageName = "type-fest";
@@ -372,6 +453,24 @@ let
       src = fetchurl {
         url = "https://registry.npmjs.org/type-fest/-/type-fest-0.10.0.tgz";
         sha512 = "EUV9jo4sffrwlg8s0zDhP0T2WD3pru5Xi0+HTE3zTUmBaZNhfkite9PdSJwdXLwPVW0jnAHT56pZHIOYckPEiw==";
+      };
+    };
+    "typed-rest-client-1.8.4" = {
+      name = "typed-rest-client";
+      packageName = "typed-rest-client";
+      version = "1.8.4";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/typed-rest-client/-/typed-rest-client-1.8.4.tgz";
+        sha512 = "MyfKKYzk3I6/QQp6e1T50py4qg+c+9BzOEl2rBmQIpStwNUoqQ73An+Tkfy9YuV7O+o2mpVVJpe+fH//POZkbg==";
+      };
+    };
+    "underscore-1.13.1" = {
+      name = "underscore";
+      packageName = "underscore";
+      version = "1.13.1";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/underscore/-/underscore-1.13.1.tgz";
+        sha512 = "hzSoAVtJF+3ZtiFX0VgfFPHEDRm7Y/QPjGyNo4TVdnDTdft3tr8hEkD25a1jC+TjTuE7tkHGKkhwCgs9dgBB2g==";
       };
     };
     "wrappy-1.0.2" = {
@@ -388,7 +487,7 @@ let
     name = "carrot-executor";
     packageName = "carrot-executor";
     version = "1.0.0";
-    src = ./..;
+    src = ../carrot_executor;
     dependencies = [
       sources."@sindresorhus/is-2.1.1"
       sources."@szmarczak/http-timer-4.0.5"
@@ -400,6 +499,7 @@ let
       sources."ansi-styles-3.2.1"
       sources."cacheable-lookup-2.0.1"
       sources."cacheable-request-7.0.2"
+      sources."call-bind-1.0.2"
       sources."camunda-external-task-client-js-git+https://github.com/camunda/camunda-external-task-client-js.git#5923f9a3e98af20aedb3481662f3fdc8f9ef9f81"
       sources."chalk-2.4.2"
       (sources."clone-response-1.0.2" // {
@@ -415,25 +515,35 @@ let
       sources."duplexer3-0.1.4"
       sources."end-of-stream-1.4.4"
       sources."escape-string-regexp-1.0.5"
+      sources."function-bind-1.1.1"
+      sources."get-intrinsic-1.1.1"
       sources."get-stream-5.2.0"
       sources."got-10.7.0"
+      sources."has-1.0.3"
       sources."has-flag-3.0.0"
+      sources."has-symbols-1.0.2"
       sources."http-cache-semantics-4.1.0"
       sources."json-buffer-3.0.1"
       sources."keyv-4.0.3"
       sources."lowercase-keys-2.0.0"
       sources."mimic-response-2.1.0"
       sources."normalize-url-6.1.0"
+      sources."object-inspect-1.10.3"
       sources."once-1.4.0"
       sources."p-cancelable-2.1.1"
       sources."p-event-4.2.0"
       sources."p-finally-1.0.0"
       sources."p-timeout-3.2.0"
       sources."pump-3.0.0"
+      sources."qs-6.10.1"
       sources."responselike-2.0.0"
+      sources."side-channel-1.0.4"
       sources."supports-color-5.5.0"
       sources."to-readable-stream-2.1.0"
+      sources."tunnel-0.0.6"
       sources."type-fest-0.10.0"
+      sources."typed-rest-client-1.8.4"
+      sources."underscore-1.13.1"
       sources."wrappy-1.0.2"
     ];
     buildInputs = globalBuildInputs;

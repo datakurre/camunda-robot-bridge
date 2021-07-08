@@ -24,6 +24,7 @@ Run Selenium keyword and return status
 *** Tasks ***
 
 Search for XKCD image
+    Log variables
     ${query}=  Get external task variable  query
 
     Open browser  about:blank  browser=headlessfirefox
