@@ -28,6 +28,7 @@ import sys
 try:
     from RPA.Robocloud.Items import Items
     from RPA.Robocloud.Secrets import Secrets
+    from RPA.Robocloud.Secrets import RobocloudVaultError
 
     HAS_RPA_FRAMEWORK = True
 except ImportError:
@@ -95,7 +96,7 @@ try:
             CAMUNDA_API_AUTHORIZATION = Secrets().get_secret(
                 os.environ.get("CAMUNDA_SECRET_NAME") or "camunda"
             )["CAMUNDA_API_AUTHORIZATION"]
-        except KeyError:
+        except (KeyError, RobocloudVaultError):
             pass
 except KeyError as e:
     raise RuntimeError(

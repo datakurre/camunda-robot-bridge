@@ -17,10 +17,26 @@ import mimetypes
 import os
 import requests
 
+try:
+    from RPA.Robocloud.Items import Items
+    from RPA.Robocloud.Secrets import Secrets
+    from RPA.Robocloud.Secrets import RobocloudVaultError
+
+    HAS_RPA_FRAMEWORK = True
+except ImportError:
+    HAS_RPA_FRAMEWORK = False
+HAS_RC_ENV = {"RC_WORKSPACE_ID", "RC_WORKITEM_ID"}.issubset(os.environ.keys())
 
 try:
     CAMUNDA_API_BASE_URL = os.environ["CAMUNDA_API_BASE_URL"]
     CAMUNDA_API_AUTHORIZATION = os.environ.get("CAMUNDA_API_AUTHORIZATION")
+    if not CAMUNDA_API_AUTHORIZATION and HAS_RC_ENV:
+        try:
+            CAMUNDA_API_AUTHORIZATION = Secrets().get_secret(
+                os.environ.get("CAMUNDA_SECRET_NAME") or "camunda"
+            )["CAMUNDA_API_AUTHORIZATION"]
+        except (KeyError, RobocloudVaultError):
+            pass
 except KeyError as e:
     raise RuntimeError(
         "CAMUNDA_API_BASE_URL environment variable not set. "
