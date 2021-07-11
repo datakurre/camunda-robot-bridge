@@ -35,6 +35,8 @@ except ImportError:
     HAS_RPA_FRAMEWORK = False
 HAS_RC_ENV = {"RC_WORKSPACE_ID", "RC_WORKITEM_ID"}.issubset(os.environ.keys())
 
+ROBOT_LOG_LEVEL = (os.environ.get("ROBOT_LOG_LEVEL") or "INFO").upper()
+
 
 def data_uri(mimetype: str, data: bytes):
     """Return a data URI with given mimetype for given bytes."""
@@ -97,7 +99,8 @@ try:
                 os.environ.get("CAMUNDA_SECRET_NAME") or "camunda"
             )["CAMUNDA_API_AUTHORIZATION"]
         except (KeyError, RobocloudVaultError):
-            pass
+            if ROBOT_LOG_LEVEL == "DEBUG":
+                logger.info("No secrets", also_console=True)
 except KeyError as e:
     raise RuntimeError(
         "CAMUNDA_API_BASE_URL environment variable not set. "
@@ -154,14 +157,14 @@ class CamundaListener:
         """Set automatic retries on failure."""
         self.retries = retries
 
-    def start_suite(self, data, result: TestCaseResult):
+    def start_suite(self, data: TestSuiteData, result: TestCaseResult):
         """Read variables from work item on RoboCloud."""
         if HAS_RC_ENV and HAS_RPA_FRAMEWORK:
             builtin = BuiltIn()
             library = Items()
             library.load_work_item_from_environment()
             for name, value in library.get_work_item_variables().items():
-                if name.startswith("CAMUNDA_"):
+                if name.startswith("CAMUNDA_TASK_"):
                     builtin.set_suite_variable(f"${{{name}}}", value)
 
     def end_test(self, data: TestCaseData, result: TestCaseResult):
@@ -202,7 +205,7 @@ class CamundaListener:
         try:
             self._close()
         except Exception as e:  # noqa
-            logger.debug(e)
+            logger.info(e, also_console=True)
             sys.exit(255)
 
     def _close(self):
@@ -212,14 +215,16 @@ class CamundaListener:
             return
 
         # 1)
-        logger.debug("CamundaListener: Close started:")
+        if ROBOT_LOG_LEVEL == "DEBUG":
+            logger.info("CamundaListener: Close started:", also_console=True)
         assert self.task_id
         assert self.execution_id
         assert self.worker_id
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
 
         # 2)
-        logger.debug("CamundaListener: * process log.html")
+        if ROBOT_LOG_LEVEL == "DEBUG":
+            logger.info("CamundaListener: * process log.html", also_console=True)
         inline_screenshots(self.output)
         path = os.path.join(os.path.dirname(self.output), "log.html")
         rebot(
@@ -233,7 +238,8 @@ class CamundaListener:
         )
 
         # 3)
-        logger.debug("CamundaListener: * submit log.html")
+        if ROBOT_LOG_LEVEL == "DEBUG":
+            logger.info("CamundaListener: * submit log.html", also_console=True)
         with open(path, "rb") as fp:
             log_html = VariableValueDto(
                 value=base64.b64encode(fp.read()),
@@ -253,7 +259,8 @@ class CamundaListener:
         # 4)
         task_url = f"{CAMUNDA_API_BASE_URL}/external-task/{self.task_id}"
         if self.error_code and self.error_message:
-            logger.debug("CamundaListener: * report BPMN error")
+            if ROBOT_LOG_LEVEL == "DEBUG":
+                logger.info("CamundaListener: * report BPMN error", also_console=True)
             url = f"{task_url}/bpmnError"
             payload = TaskBpmnErrorDto(
                 workerId=self.worker_id,
@@ -262,13 +269,17 @@ class CamundaListener:
                 errorMessage=self.error_message,
             )
         elif self.status == Status.PASS:
-            logger.debug("CamundaListener: * report complete")
+            if ROBOT_LOG_LEVEL == "DEBUG":
+                logger.info("CamundaListener: * report complete", also_console=True)
             url = f"{task_url}/complete"
             payload = CompleteExternalTaskDto(
-                workerId=self.worker_id, variables={}, localVariables={},
+                workerId=self.worker_id,
+                variables={},
+                localVariables={},
             )
         else:
-            logger.debug("CamundaListener: * report failure")
+            if ROBOT_LOG_LEVEL == "DEBUG":
+                logger.info("CamundaListener: * report failure", also_console=True)
             url = f"{task_url}/failure"
             payload = ExternalTaskFailureDto(
                 workerId=self.worker_id,
@@ -278,13 +289,14 @@ class CamundaListener:
                 errorDetails="\n".join(self.errors),
                 retries=self.retries or 0,
             )
-            logger.debug(url)
-            logger.debug(headers)
-            logger.debug(payload.json())
+            if ROBOT_LOG_LEVEL == "DEBUG":
+                logger.info(url, also_console=True)
+                logger.info(headers, also_console=True)
+                logger.info(payload.json(), also_console=True)
         response = requests.post(url, headers=headers, data=payload.json(), auth=auth)
         logger.debug(f"CamundaListener: {response}")
         if response.status_code != 204:
-            logger.debug("CamundaListener: * report error")
+            logger.info("CamundaListener: * report error", also_console=True)
             url = f"{task_url}/failure"
             payload = ExternalTaskFailureDto(
                 workerId=self.worker_id,
@@ -301,4 +313,5 @@ class CamundaListener:
                 raise RobotError(f"{response.status_code} {response.text}")
 
         # 5)
-        logger.debug("CamundaListener: Close completed.")
+        if ROBOT_LOG_LEVEL == "DEBUG":
+            logger.info("CamundaListener: Close completed.", also_console=True)

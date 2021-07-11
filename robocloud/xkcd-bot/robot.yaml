@@ -1,0 +1,37 @@
+tasks:
+
+  Search for XKCD image:
+    command:
+      - python
+      - -m
+      - robot
+      - --rpa
+      - --nostatusrc
+      - --outputdir
+      - output
+      - --listener
+      - CamundaListener
+      - --task
+      - Search for XKCD image
+      - xkcd.robot
+
+  Download XKCD image:
+    command:
+      - python
+      - -m
+      - robot
+      - --rpa
+      - --nostatusrc
+      - --outputdir
+      - output
+      - --listener
+      - CamundaListener
+      - --task
+      - Download XKCD image
+      - xkcd.robot
+
+condaConfigFile:
+  conda.yaml
+
+artifactsDir:
+  output
