@@ -9,7 +9,7 @@ packages = [
     { include = "*.py", from="lib" },
     { include = "carrot_executor/*.py" },
 ]
-include = [ "CHANGELOG.md", "carrot_executor/index.js" ]
+include = [ "carrot_executor/index.js" ]
 readme = "README.md"
 
 [tool.poetry.scripts]
